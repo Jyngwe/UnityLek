@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour {
 
-    public int damagePerHit = 20;
+    public int damagePerHit = 100;
     public float timeBetweenAttacks = 0.15f;
     public float range = 100f;
+    Animator anim;
 
     float timer;
     Ray attackRay;
@@ -19,9 +20,10 @@ public class PlayerAttack : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
 
+        anim = GetComponent<Animator>();
         shootableMask = LayerMask.GetMask("Shootable");
-        SpearHitParticle = GetComponent<ParticleSystem>();
         spearLight = GetComponent<Light>();
+       
 		
 	}
 	
@@ -51,9 +53,10 @@ public class PlayerAttack : MonoBehaviour {
         timer = 0f;
 
         spearLight.enabled = true;
+        anim.SetTrigger("PlayerAttack");
 
-        SpearHitParticle.Stop();
-        SpearHitParticle.Play();
+        attackRay.origin = transform.position;
+        attackRay.direction = transform.forward;
 
         if(Physics.Raycast (attackRay, out attackHit, range, shootableMask))
         {

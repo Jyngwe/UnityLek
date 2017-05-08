@@ -20,7 +20,7 @@ public class EnemyHealth1 : MonoBehaviour
     {
 
         anim = GetComponent<Animator>();
-        hitParticles = GetComponentInChildren<ParticleSystem>();
+        hitParticles = GetComponent<ParticleSystem>();
         capsuleCollider = GetComponent<CapsuleCollider>();
 
         currentHealth = startingHealth;
@@ -46,8 +46,7 @@ public class EnemyHealth1 : MonoBehaviour
         }
 
         currentHealth -= amount;
-
-        hitParticles.transform.position = hitPoint;
+        hitParticles.Stop();
         hitParticles.Play();
 
         if (currentHealth <= 0)
@@ -62,7 +61,7 @@ public class EnemyHealth1 : MonoBehaviour
         isDead = true;
 
         capsuleCollider.isTrigger = true;
-        anim.SetTrigger("Dead");
+        anim.SetTrigger("Death");
 
     }
 

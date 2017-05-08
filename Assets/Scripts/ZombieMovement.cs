@@ -6,12 +6,15 @@ using UnityEngine.AI;
 public class ZombieMovement : MonoBehaviour {
 
     Transform player;
+    PlayerHealth playerHealth;
+    EnemyHealth1 enemyHealth;
     NavMeshAgent nav;
        
 	// Use this for initialization
 	void Awake () {
         player = GameObject.FindGameObjectWithTag("Player").transform;
-
+        playerHealth = player.GetComponent<PlayerHealth>();
+        enemyHealth = GetComponent<EnemyHealth1>();
         nav = GetComponent<NavMeshAgent>();
 		
 	}
@@ -19,6 +22,13 @@ public class ZombieMovement : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        nav.SetDestination(player.position);
+        if (enemyHealth.currentHealth > 0 && playerHealth.currentHealth > 0)
+        {
+            nav.SetDestination(player.position);
+        }
+        else
+        {
+            nav.enabled = false;
+        }
 	}
 }
