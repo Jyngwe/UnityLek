@@ -5,6 +5,7 @@ using UnityEngine;
 public class AnimationController : MonoBehaviour {
 	Animator animation;
 	int moveHash = Animator.StringToHash("Base Layer.Run");
+
 	void Start ()
 	{
 		animation = GetComponent<Animator> ();

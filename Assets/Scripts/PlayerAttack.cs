@@ -6,25 +6,26 @@ public class PlayerAttack : MonoBehaviour {
 
     public int damagePerHit = 100;
     public float timeBetweenAttacks = 1f;
-    public float range = 100f;
+    public float range = 50f;
     Animator anim;
 
+
     float timer;
-    Ray attackRay;
-    RaycastHit attackHit;
+    Ray shootRay;
+    RaycastHit shootHit;
     int shootableMask;
     ParticleSystem SpearHitParticle;
-    Light spearLight;
+    LineRenderer gunLine;
+    Light gunLight;
     float effectsDisplayTime = 0.2f;
 
 	// Use this for initialization
 	void Awake () {
 
-        anim = GetComponent<Animator>();
         shootableMask = LayerMask.GetMask("Shootable");
-        spearLight = GetComponent<Light>();
-       
-		
+        gunLight = GetComponent<Light>();
+        gunLine = GetComponent<LineRenderer>();
+   
 	}
 	
 	// Update is called once per frame
@@ -45,26 +46,34 @@ public class PlayerAttack : MonoBehaviour {
 
     public void DisableEffects()
     {
-        spearLight.enabled = false;
+        gunLight.enabled = false;
+        gunLine.enabled = false;
     }
 
     void Attack()
     {
         timer = 0f;
 
-        spearLight.enabled = true;
-        anim.SetTrigger("PlayerAttack");
+        gunLight.enabled = true;
 
-        attackRay.origin = transform.position;
-        attackRay.direction = transform.forward;
+        gunLine.enabled = true;
+        gunLine.SetPosition(0, transform.position);
 
-        if(Physics.Raycast (attackRay, out attackHit, range, shootableMask))
+        shootRay.origin = transform.position;
+        shootRay.direction = -transform.right;
+
+        if(Physics.Raycast (shootRay, out shootHit, range, shootableMask))
         {
-            EnemyHealth1 enemyHealth = attackHit.collider.GetComponent<EnemyHealth1>();
+            EnemyHealth1 enemyHealth = shootHit.collider.GetComponent<EnemyHealth1>();
             if(enemyHealth != null)
             {
-                enemyHealth.TakeDamage(damagePerHit, attackHit.point);
+                enemyHealth.TakeDamage(damagePerHit, shootHit.point);
             }
+            gunLine.SetPosition(1, shootHit.point);
+        }
+        else
+        {
+            gunLine.SetPosition(1, shootRay.origin + shootRay.direction * range);
         }
     
     }

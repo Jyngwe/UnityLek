@@ -22,7 +22,7 @@ public class ZombieMovement : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        if (playerHealth.currentHealth > 0)
+        if (enemyHealth.currentHealth > 0 && playerHealth.currentHealth > 0)
         {
             nav.SetDestination(player.position);
         }
