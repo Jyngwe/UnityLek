@@ -14,6 +14,9 @@ public class EnemyManager : MonoBehaviour {
 
     public int pooledZombies = 4;
     List<GameObject> zombies;
+
+    // I början av skriptet skapas alla objekt av zombies (går att sätta den variabeln både i skriptet och i Unity
+    // Sedan sätts dessa som aktiva/inaktiva och återanvänds allteftersom de dödas. 
   
     void Start ()
     {
@@ -51,6 +54,5 @@ public class EnemyManager : MonoBehaviour {
             }
         }   
     }
-    // Update is called once per frame
 
 }

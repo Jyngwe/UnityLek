@@ -22,6 +22,7 @@ public class ZombieMovement : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+        //Om både player och enemy lever, ska enemy jaga player
         if (enemyHealth.currentHealth > 0 && playerHealth.currentHealth > 0)
         {
             nav.SetDestination(player.position);

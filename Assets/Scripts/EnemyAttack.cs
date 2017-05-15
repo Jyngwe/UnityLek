@@ -25,6 +25,7 @@ public class EnemyAttack : MonoBehaviour {
 		
 	}
 
+    //Om zombien kolliderar med player är de inom range för att attackera
     void OnTriggerEnter (Collider other)
     {
         if(other.gameObject == player)
@@ -63,6 +64,7 @@ public class EnemyAttack : MonoBehaviour {
         if(playerHealth.currentHealth > 0)
         {
             anim.SetTrigger("InRange");
+            //TakeDamage är funktion i playerHealth-skript
             playerHealth.TakeDamage(attackDamage);
         }
     }

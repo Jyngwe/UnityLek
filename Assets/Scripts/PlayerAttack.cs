@@ -9,7 +9,7 @@ public class PlayerAttack : MonoBehaviour {
     public float range = 50f;
     Animator anim;
 
-
+    ParticleSystem gunParticles;
     float timer;
     Ray shootRay;
     RaycastHit shootHit;
@@ -25,6 +25,7 @@ public class PlayerAttack : MonoBehaviour {
         shootableMask = LayerMask.GetMask("Shootable");
         gunLight = GetComponent<Light>();
         gunLine = GetComponent<LineRenderer>();
+        gunParticles = GetComponent<ParticleSystem>();
    
 	}
 	
@@ -55,6 +56,9 @@ public class PlayerAttack : MonoBehaviour {
         timer = 0f;
 
         gunLight.enabled = true;
+
+        gunParticles.Stop();
+        gunParticles.Play();
 
         gunLine.enabled = true;
         gunLine.SetPosition(0, transform.position);

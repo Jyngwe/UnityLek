@@ -27,6 +27,7 @@ public class PlayerHealth : MonoBehaviour {
 		
         if(damaged)
         {
+            // Blinkar röd färg på skärmen i någon millisekund när man tar skada
             damageImage.color = flashColour;
         }
         else
@@ -51,7 +52,6 @@ public class PlayerHealth : MonoBehaviour {
     void Death()
     {
         isDead = true;
-
         anim.SetTrigger("Die");
         playerMovement.enabled = false;
     }

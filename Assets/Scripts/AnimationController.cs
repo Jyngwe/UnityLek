@@ -13,5 +13,11 @@ public class AnimationController : MonoBehaviour {
 	void Update(){
 		float move = Input.GetAxis ("Vertical");
 		animation.SetFloat ("Speed", move);
-	}
+
+        if (Input.GetButton("Fire1"))
+        {
+            animation.SetTrigger("PlayerAttack");
+        }
+
+    }
 }

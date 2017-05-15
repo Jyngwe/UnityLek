@@ -7,10 +7,9 @@ public class EnemyHealth1 : MonoBehaviour
 {
     public int startingHealth = 100;
     public int currentHealth;
-    public float sinkSpeed = 2.5f;
+    public float sinkSpeed = 5.5f;
     public int scoreValue = 10;
 
-    Animation ani;
     Animator anim;
     ParticleSystem hitParticles;
     CapsuleCollider capsuleCollider;
@@ -24,7 +23,7 @@ public class EnemyHealth1 : MonoBehaviour
     {
         nav = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
-        hitParticles = GetComponent<ParticleSystem>();
+        hitParticles = GetComponentInChildren<ParticleSystem>();
         capsuleCollider = GetComponent<CapsuleCollider>();
 
         currentHealth = startingHealth;
@@ -35,10 +34,10 @@ public class EnemyHealth1 : MonoBehaviour
     void Update()
     {
 
-        //if (isSinking)
-        //{
-        //    transform.Translate(-Vector3.up * sinkSpeed * Time.deltaTime);
-        //}
+        if (isSinking)
+        {
+            transform.Translate(-Vector3.up * sinkSpeed * Time.deltaTime);
+        }
 
     }
 
@@ -66,25 +65,29 @@ public class EnemyHealth1 : MonoBehaviour
  
         capsuleCollider.isTrigger = true;
         anim.SetTrigger("Death");
+        // Invoke = spela x funktion efter delay (i sekunder)
         Invoke("setInactive", 1);
 
     }
 
+    // Funktion som sätter objektet till inaktivt, så att det kan användas igen i EnemyManger-skriptet
     void setInactive()
     {
         nav.enabled= false;
         isDead = false;
         currentHealth = startingHealth;
         gameObject.SetActive(false);
-        
-     
+
     }
 
-    //public void StartSinking()
-    //{
-    //    GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;
-    //    GetComponent<Rigidbody>().isKinematic = true;
-    //    isSinking = true;
+
+    // Animation event som kallar på denna metod. Fungerar dock sådär i dagsläget. 
+    // Tanken är att ca 1 sekund in i "dödsanimationen" skall kroppen börja sjunka ner i marken.
+    public void StartSinking()
+    {
+        GetComponent<Rigidbody>().isKinematic = true;
+        isSinking = true;
+        
       
-    //}
+    }
 }
