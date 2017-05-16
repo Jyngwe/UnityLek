@@ -3,20 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class AnimationController : MonoBehaviour {
-	Animator animation;
+	Animator animator;
+    Animation animation;
 	int moveHash = Animator.StringToHash("Base Layer.Run");
 
 	void Start ()
 	{
-		animation = GetComponent<Animator> ();
+		animator = GetComponent<Animator> ();
+        animation = GetComponent<Animation>();
 	}
 	void Update(){
 		float move = Input.GetAxis ("Vertical");
-		animation.SetFloat ("Speed", move);
+
+		animator.SetFloat ("Speed", move);
 
         if (Input.GetButton("Fire1"))
         {
-            animation.SetTrigger("PlayerAttack");
+            animator.SetTrigger("PlayerAttack");
         }
 
     }

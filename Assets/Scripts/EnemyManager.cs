@@ -6,20 +6,24 @@ using UnityEngine.AI;
 public class EnemyManager : MonoBehaviour {
 
     public PlayerHealth playerHealth;
+    public EnemyAttack enemyAttack;
+    public EnemyHealth1 enemyHealth;
     public GameObject enemy;
     public float spawnTime = 5f;
     public Transform[] spawnPoints;
+
+    public int pooledPacks;
+    public int pooledZombies;
     NavMeshAgent nav;
-
-
-    public int pooledZombies = 4;
     List<GameObject> zombies;
+
 
     // I början av skriptet skapas alla objekt av zombies (går att sätta den variabeln både i skriptet och i Unity
     // Sedan sätts dessa som aktiva/inaktiva och återanvänds allteftersom de dödas. 
   
     void Start ()
     {
+
         zombies = new List<GameObject>();
         for (int i = 0; i < pooledZombies; i++)
         {
@@ -27,7 +31,7 @@ public class EnemyManager : MonoBehaviour {
             obj.SetActive(false);
             zombies.Add(obj);
         }
-
+       
         InvokeRepeating("Spawn", spawnTime, spawnTime);
     
 	}
@@ -44,6 +48,18 @@ public class EnemyManager : MonoBehaviour {
             if(!zombies[i].activeInHierarchy)
             {
                 nav = zombies[i].GetComponent<NavMeshAgent>();
+                enemyAttack = zombies[i].GetComponent<EnemyAttack>();
+
+                //Randomize storlek, snabbhet och attackDamage på zombies
+                nav.speed = Random.Range(5f, 12f);
+                nav.transform.localScale = Vector3.one * (Random.Range(3f, 10f));
+                enemyAttack.attackDamage = Random.Range(5, 20);
+
+                if (Random.Range(0, 100) < 30)
+                {
+                    enemyHealth = zombies[i].GetComponent<EnemyHealth1>();
+                    enemyHealth.hasHealthPack = true;
+                }
 
                 int spawnPointIndex = Random.Range(0, spawnPoints.Length);
                 zombies[i].transform.position = spawnPoints[spawnPointIndex].position;

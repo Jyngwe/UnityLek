@@ -9,12 +9,15 @@ public class EnemyHealth1 : MonoBehaviour
     public int currentHealth;
     public float sinkSpeed = 5.5f;
     public int scoreValue = 10;
+    public bool hasHealthPack;
 
     Animator anim;
     ParticleSystem hitParticles;
     CapsuleCollider capsuleCollider;
     NavMeshAgent nav;
-    
+    HealthPack healthPack;
+    EnemyAttack enemyAttack;
+
     bool isDead;
     bool isSinking;
 
@@ -25,6 +28,8 @@ public class EnemyHealth1 : MonoBehaviour
         anim = GetComponent<Animator>();
         hitParticles = GetComponentInChildren<ParticleSystem>();
         capsuleCollider = GetComponent<CapsuleCollider>();
+        healthPack = GetComponent<HealthPack>();
+        enemyAttack = GetComponent<EnemyAttack>();
 
         currentHealth = startingHealth;
 
@@ -61,8 +66,12 @@ public class EnemyHealth1 : MonoBehaviour
 
     void Death()
     {
+        if(hasHealthPack)
+        {
+            healthPack.Spawn();
+        }
+
         isDead = true;
- 
         capsuleCollider.isTrigger = true;
         anim.SetTrigger("Death");
         // Invoke = spela x funktion efter delay (i sekunder)
@@ -76,6 +85,7 @@ public class EnemyHealth1 : MonoBehaviour
         nav.enabled= false;
         isDead = false;
         currentHealth = startingHealth;
+        enemyAttack.playerInRange = false;
         gameObject.SetActive(false);
 
     }

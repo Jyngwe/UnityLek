@@ -12,7 +12,7 @@ public class EnemyAttack : MonoBehaviour {
     PlayerHealth playerHealth;
     EnemyHealth1 enemyHealth;
 
-    bool playerInRange;
+    public bool playerInRange;
     float timer;
 
 	// Use this for initialization
@@ -66,6 +66,7 @@ public class EnemyAttack : MonoBehaviour {
             anim.SetTrigger("InRange");
             //TakeDamage är funktion i playerHealth-skript
             playerHealth.TakeDamage(attackDamage);
+     
         }
     }
 }

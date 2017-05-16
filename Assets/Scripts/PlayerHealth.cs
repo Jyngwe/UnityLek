@@ -11,6 +11,7 @@ public class PlayerHealth : MonoBehaviour {
     public Image damageImage;
     public float flashSpeed = 5f;
     public Color flashColour = new Color(1f, 0f, 0f, 0.1f);
+    public Text deathText;
 
     Animator anim;
     PlayerController playerMovement;
@@ -49,10 +50,20 @@ public class PlayerHealth : MonoBehaviour {
         }
     }
 
+    public void gainHealth(int amount)
+    {
+        if (currentHealth < 100)
+        {
+            currentHealth += amount;
+            healthSlider.value = currentHealth;
+        }
+    }
+
     void Death()
     {
         isDead = true;
         anim.SetTrigger("Die");
+        deathText.enabled = true;
         playerMovement.enabled = false;
     }
 }
