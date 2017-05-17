@@ -6,15 +6,19 @@ using UnityEngine.AI;
 public class EnemyManager : MonoBehaviour {
 
     public PlayerHealth playerHealth;
-    public EnemyAttack enemyAttack;
-    public EnemyHealth1 enemyHealth;
     public GameObject enemy;
     public float spawnTime = 5f;
     public Transform[] spawnPoints;
-
-    public int pooledPacks;
     public int pooledZombies;
-    NavMeshAgent nav;
+    public int pooledPacks = 5;
+    public GameObject healthPack;
+
+    EnemyAttack enemyAttack;
+    EnemyHealth1 enemyHealth;
+    TextMesh text;
+    NavMeshAgent navHealthPack;
+    NavMeshAgent navZombie;
+    List<GameObject> healthPacks;
     List<GameObject> zombies;
 
 
@@ -23,6 +27,14 @@ public class EnemyManager : MonoBehaviour {
   
     void Start ()
     {
+        navHealthPack = GetComponent<NavMeshAgent>();
+        healthPacks = new List<GameObject>();
+        for (int i = 0; i < pooledPacks; i++)
+        {
+            GameObject obj = (GameObject)Instantiate(healthPack);
+            obj.SetActive(false);
+            healthPacks.Add(obj);
+        }
 
         zombies = new List<GameObject>();
         for (int i = 0; i < pooledZombies; i++)
@@ -36,6 +48,7 @@ public class EnemyManager : MonoBehaviour {
     
 	}
 
+
     void Spawn()
     {
         if (playerHealth.currentHealth <= 0f)
@@ -47,28 +60,50 @@ public class EnemyManager : MonoBehaviour {
         {
             if(!zombies[i].activeInHierarchy)
             {
-                nav = zombies[i].GetComponent<NavMeshAgent>();
+                enemyHealth = zombies[i].GetComponent<EnemyHealth1>();
+                navZombie = zombies[i].GetComponent<NavMeshAgent>();
                 enemyAttack = zombies[i].GetComponent<EnemyAttack>();
 
                 //Randomize storlek, snabbhet och attackDamage på zombies
-                nav.speed = Random.Range(5f, 12f);
-                nav.transform.localScale = Vector3.one * (Random.Range(3f, 10f));
-                enemyAttack.attackDamage = Random.Range(5, 20);
+                navZombie.transform.localScale = Vector3.one * (Random.Range(3f, 10f));
+
+                navZombie.speed = 11 - navZombie.transform.localScale.x;
+                enemyHealth.startingHealth = navZombie.transform.localScale.x * 20;
+                enemyHealth.currentHealth = enemyHealth.startingHealth;
+
+                enemyAttack.attackDamage = (int) navZombie.transform.localScale.x * 2;
 
                 if (Random.Range(0, 100) < 30)
-                {
-                    enemyHealth = zombies[i].GetComponent<EnemyHealth1>();
+                {    
                     enemyHealth.hasHealthPack = true;
                 }
 
+                //Slumpa fram spawnpoint innan aktuell zombie blir aktiv
                 int spawnPointIndex = Random.Range(0, spawnPoints.Length);
                 zombies[i].transform.position = spawnPoints[spawnPointIndex].position;
                 zombies[i].transform.rotation = spawnPoints[spawnPointIndex].rotation;
                 zombies[i].SetActive(true);
-                nav.enabled = true;
+                navZombie.enabled = true;
                 break;
             }
         }   
+    }
+
+    public void SpawnHealthPack(float x, float y, float z)
+    {
+
+        for (int i = 0; i < healthPacks.Count; i++)
+        {
+            if (!healthPacks[i].activeInHierarchy)
+            {
+                healthPacks[i].transform.position = new Vector3(x,y+2,z);
+                healthPacks[i].transform.rotation = navZombie.transform.rotation;
+                healthPacks[i].SetActive(true);
+                break;
+
+            }
+        }
+
     }
 
 }

@@ -4,10 +4,15 @@ using UnityEngine;
 
 public class CountDownTimer : MonoBehaviour {
 
-    GameObject player;
+    
     public float timeLeft;
+    public float defTime;
+
+    GameObject player;
+
     // Use this for initialization
     void Start () {
+        defTime = timeLeft;
         player = GameObject.FindGameObjectWithTag("Player");
     }
 	
@@ -23,6 +28,7 @@ public class CountDownTimer : MonoBehaviour {
             if (timeLeft<=0)
             {
                 gameObject.SetActive(false);
+                timeLeft = defTime;
             }
         }
 

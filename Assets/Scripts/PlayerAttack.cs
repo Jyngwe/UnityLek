@@ -73,6 +73,11 @@ public class PlayerAttack : MonoBehaviour {
             {
                 enemyHealth.TakeDamage(damagePerHit, shootHit.point);
             }
+            BossHealth bossHealth = shootHit.collider.GetComponent<BossHealth>();
+            if(bossHealth != null)
+            {
+                bossHealth.TakeDamage(damagePerHit, shootHit.point);
+            }
             gunLine.SetPosition(1, shootHit.point);
         }
         else

@@ -5,11 +5,16 @@ using UnityEngine.AI;
 
 public class EnemyHealth1 : MonoBehaviour
 {
-    public int startingHealth = 100;
-    public int currentHealth;
+
     public float sinkSpeed = 5.5f;
     public int scoreValue = 10;
     public bool hasHealthPack;
+    public GameObject healthBar;
+    public float startingHealth;
+    public float currentHealth;
+
+    bool isDead;
+    bool isSinking;
 
     Animator anim;
     ParticleSystem hitParticles;
@@ -17,9 +22,8 @@ public class EnemyHealth1 : MonoBehaviour
     NavMeshAgent nav;
     HealthPack healthPack;
     EnemyAttack enemyAttack;
-
-    bool isDead;
-    bool isSinking;
+    GameObject enemyManager;
+    EnemyManager enemyManagerScript;
 
     // Use this for initialization
     void Awake()
@@ -30,14 +34,23 @@ public class EnemyHealth1 : MonoBehaviour
         capsuleCollider = GetComponent<CapsuleCollider>();
         healthPack = GetComponent<HealthPack>();
         enemyAttack = GetComponent<EnemyAttack>();
-
+        enemyManager = GameObject.FindGameObjectWithTag("Respawn");
+        enemyManagerScript = enemyManager.GetComponent<EnemyManager>();
+         
         currentHealth = startingHealth;
-
+ 
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        healthBar.transform.localScale = new Vector3(currentHealth / startingHealth, healthBar.transform.localScale.y, healthBar.transform.localScale.z);
+
+        if(currentHealth/startingHealth < 0)
+        {
+            healthBar.transform.localScale = new Vector3(0, healthBar.transform.localScale.y, healthBar.transform.localScale.z);
+        }
 
         if (isSinking)
         {
@@ -68,7 +81,8 @@ public class EnemyHealth1 : MonoBehaviour
     {
         if(hasHealthPack)
         {
-            healthPack.Spawn();
+            enemyManagerScript.SpawnHealthPack(transform.position.x, transform.position.y, transform.position.z);
+            hasHealthPack = false;
         }
 
         isDead = true;
@@ -76,7 +90,6 @@ public class EnemyHealth1 : MonoBehaviour
         anim.SetTrigger("Death");
         // Invoke = spela x funktion efter delay (i sekunder)
         Invoke("setInactive", 1);
-
     }
 
     // Funktion som sätter objektet till inaktivt, så att det kan användas igen i EnemyManger-skriptet
@@ -87,9 +100,7 @@ public class EnemyHealth1 : MonoBehaviour
         currentHealth = startingHealth;
         enemyAttack.playerInRange = false;
         gameObject.SetActive(false);
-
     }
-
 
     // Animation event som kallar på denna metod. Fungerar dock sådär i dagsläget. 
     // Tanken är att ca 1 sekund in i "dödsanimationen" skall kroppen börja sjunka ner i marken.
@@ -97,7 +108,7 @@ public class EnemyHealth1 : MonoBehaviour
     {
         GetComponent<Rigidbody>().isKinematic = true;
         isSinking = true;
-        
-      
+        ScoreManager.score += scoreValue;
+
     }
 }

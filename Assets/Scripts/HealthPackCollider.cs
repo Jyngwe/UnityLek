@@ -5,14 +5,18 @@ using UnityEngine.UI;
 
 public class HealthPackCollider : MonoBehaviour {
 
+    public Slider healthSlider;
+
     GameObject player;
     PlayerHealth playerHealth;
-    public Slider healthSlider;
+    CountDownTimer countDownTimer;
+ 
     // Use this for initialization
     void Start () {
 
         player = GameObject.FindGameObjectWithTag("Player");
         playerHealth = player.GetComponent<PlayerHealth>();
+        countDownTimer = GetComponent<CountDownTimer>();
 
     }
 
@@ -22,6 +26,7 @@ public class HealthPackCollider : MonoBehaviour {
         {
             playerHealth.gainHealth(10);
             gameObject.SetActive(false);
+            countDownTimer.timeLeft = countDownTimer.defTime;
         }
     }
 
